@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tabs>
+        <tab
+            barColorWhenSelected="#1B64AA"
+            id="@+id/tab1_team"
+            title="해축갤" />
+        <tab
+            barColorWhenSelected="#ef0030"
+            id="@+id/tab2_match"
+            title="뉴스" />
+        <tab
+            barColorWhenSelected="#FFCD12"
+            id="@+id/tab3_schedule"
+            title="일정" />
+    </tabs>
+</tabs>
