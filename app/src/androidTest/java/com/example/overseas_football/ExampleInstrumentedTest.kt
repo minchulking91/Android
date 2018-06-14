@@ -1,4 +1,4 @@
-package com.example.overseas_footbal
+package com.example.overseas_football
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

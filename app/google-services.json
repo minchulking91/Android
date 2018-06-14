@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "598778312336",
+    "firebase_url": "https://overseas-football.firebaseio.com",
+    "project_id": "overseas-football",
+    "storage_bucket": "overseas-football.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598778312336:android:e0881fa7260efc2b",
+        "android_client_info": {
+          "package_name": "com.example.overseas_football"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "598778312336-7gbvc2bggg712n96vv04vkr29370aar2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.overseas_football",
+            "certificate_hash": "1c56ad3f635e9611f006721d7a2c038cb353a6a4"
+          }
+        },
+        {
+          "client_id": "598778312336-du67t95rl7693bav2d2vujiq1bjdofa2.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "598778312336-du67t95rl7693bav2d2vujiq1bjdofa2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJahM6q23tZDE10_8bHPJr7vHmUMwIaZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "598778312336-du67t95rl7693bav2d2vujiq1bjdofa2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

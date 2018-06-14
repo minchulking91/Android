@@ -1,4 +1,4 @@
-package com.example.overseas_footbal
+package com.example.overseas_football
 
 import org.junit.Test
 
