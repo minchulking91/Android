@@ -4,6 +4,7 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityLoginBinding
 import com.example.overseas_football.viewmodel.LoginViewModel
@@ -44,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
                 firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
+             Log.e("??",e.message)
             }
 
         }

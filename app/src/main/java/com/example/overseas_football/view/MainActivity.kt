@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityMainBinding
+import com.example.overseas_football.view.fragment.Tab1_Community
+import com.example.overseas_football.view.fragment.Tab2_News
 import com.example.overseas_football.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -13,6 +15,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.mainActivity = MainViewModel(this.fragmentManager)
+        val mainViewModel=MainViewModel()
+        binding.mainActivity = mainViewModel
+
+        binding.bottombar.setOnTabSelectListener { tabId ->
+            val transaction = fragmentManager.beginTransaction()
+            when (tabId) {
+                R.id.tab1_team -> transaction.replace(R.id.framelayout, Tab1_Community()).commit()
+                R.id.tab2_match -> transaction.replace(R.id.framelayout, Tab2_News()).commit()
+            }
+        }
+    }
+
+    fun abd(a:Int) : Int{
+        when(a){
+            1-> 2
+            2->3
+        }
+        return 4
     }
 }

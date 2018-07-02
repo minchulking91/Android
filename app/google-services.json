@@ -23,8 +23,12 @@
           }
         },
         {
-          "client_id": "598778312336-du67t95rl7693bav2d2vujiq1bjdofa2.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "598778312336-n8knrhf5jjmhiuhh9kf3orikf9vce7jm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.overseas_football",
+            "certificate_hash": "dc1a093f3638fd54c6c688d69a7dd94bc15c2b6d"
+          }
         },
         {
           "client_id": "598778312336-du67t95rl7693bav2d2vujiq1bjdofa2.apps.googleusercontent.com",

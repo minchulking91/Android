@@ -1,8 +1,8 @@
 package com.example.overseas_football
 
-import android.app.Application
+import android.support.multidex.MultiDexApplication
 
-class MyService : Application() {
+class MyService : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
     }

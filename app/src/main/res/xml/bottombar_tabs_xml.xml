@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tabs>
+<PreferenceScreen>
     <tabs>
         <tab
             barColorWhenSelected="#1B64AA"
+            icon="@drawable/icon_chat"
             id="@+id/tab1_team"
             title="해축갤" />
         <tab
             barColorWhenSelected="#ef0030"
+            icon="@drawable/icon_chat"
             id="@+id/tab2_match"
             title="뉴스" />
         <tab
             barColorWhenSelected="#FFCD12"
+            icon="@drawable/icon_schedule"
             id="@+id/tab3_schedule"
             title="일정" />
     </tabs>
-</tabs>
+</PreferenceScreen>

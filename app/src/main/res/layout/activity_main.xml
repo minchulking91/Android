@@ -26,7 +26,6 @@
             android:layout_height="65dp"
             android:layout_alignParentBottom="true"
             app:bb_activeTabAlpha="1"
-            android:onClick="@{(Int)->mainActivity.BottomBarControl(Int)}"
             app:bb_activeTabColor="#fff"
             app:bb_badgesHideWhenActive="true"
             app:bb_inActiveTabAlpha="0.6"

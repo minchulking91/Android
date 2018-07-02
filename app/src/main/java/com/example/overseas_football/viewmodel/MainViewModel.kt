@@ -1,15 +1,17 @@
 package com.example.overseas_football.viewmodel
 
+import android.app.Activity
 import android.app.FragmentManager
 import android.util.Log
+import com.example.overseas_football.R
+import com.example.overseas_football.view.fragment.Tab1_Community
+import com.example.overseas_football.view.fragment.Tab2_News
+import com.roughike.bottombar.BottomBar
 
-class MainViewModel(var fragment_manager: FragmentManager) {
-    fun BottomBarControl(tabid: Int) {
-//        Log.e("??", tabid.toString())
-//        val transaction = fragment_manager.beginTransaction()
-//        when (tabid) {
-//            R.id.tab1_team -> transaction.replace(R.id.framelayout, (Tab1_Community() as Fragment)).commit()
-//            R.id.tab2_match -> transaction.replace(R.id.framelayout, (Tab2_News() as Fragment)).commit()
-//        }
-    }
+class MainViewModel() {
+
+
+
+
 }
+
