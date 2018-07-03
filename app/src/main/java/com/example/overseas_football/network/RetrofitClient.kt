@@ -1,5 +1,6 @@
 package com.example.overseas_football.network
 
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -10,9 +11,16 @@ class RetrofitClient {
 
     fun setRetrofit(url:String): RetrofitService {
         val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-        val client = OkHttpClient.Builder().addInterceptor(logging).build()
+        val client = OkHttpClient
+                .Builder()
+                .addInterceptor {chain->
+                    chain.proceed(chain.request().newBuilder().addHeader("Content-Type", "application/json; charset=utf-8").build())
+                }
+                .addInterceptor(logging)
+                .build()
 
-        val retrofitApi = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
+        val retrofitApi = Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(url)
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

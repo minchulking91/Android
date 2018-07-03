@@ -7,20 +7,20 @@ import android.os.Parcelable
 data class NewsResModel(
         val status: String,
         val totalResults: Int,
-        val contents: List<Contents>
+        val articles: List<Articles>
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readInt(),
-            listOf<Contents>().apply {
-                parcel.readList(this, Contents::class.java.classLoader)
+            listOf<Articles>().apply {
+                parcel.readList(this, Articles::class.java.classLoader)
             }
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(status)
         parcel.writeInt(totalResults)
-        parcel.writeList(contents)
+        parcel.writeList(articles)
     }
 
     override fun describeContents(): Int {
@@ -38,7 +38,7 @@ data class NewsResModel(
     }
 }
 
-data class Contents(
+data class Articles(
         val author: Any,
         val title: String,
         val description: String,

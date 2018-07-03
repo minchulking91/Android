@@ -13,7 +13,7 @@ interface RetrofitService {
 
     @GET("/v2/top-headlines")
     fun getNews(@Query("country") country: String,
-                @Query("categoty") categoty: String,
+                @Query("category") categoty: String,
                 @Query("apiKey") apiKey: String): Observable<NewsResModel>
 }
 
