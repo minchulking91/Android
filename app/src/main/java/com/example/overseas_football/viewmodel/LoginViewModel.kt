@@ -7,6 +7,7 @@ import android.databinding.ObservableField
 import android.util.Log
 import android.view.View
 import com.example.overseas_football.R
+import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.MainActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -26,15 +27,15 @@ class LoginViewModel(var activity: Activity) {
     }
 
     fun GoogleSessionCheck() {
-        Log.e("cc","cc")
+        Log.e("cc", "cc")
         textview_result.let {
             val user = FirebaseAuth.getInstance().currentUser
             if (null == user) {
                 it.set("비로그인")
             } else {
                 RetrofitClient()
-                        .setRetrofit()
-                        .signup(user.email!!, user.displayName!!, "google")
+                        .setRetrofit(Constants.BASE_URL)
+                        .setResister(user.email!!, user.displayName!!, "google")
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
