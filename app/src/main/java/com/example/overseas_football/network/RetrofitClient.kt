@@ -15,6 +15,7 @@ class RetrofitClient {
                 .Builder()
                 .addInterceptor {chain->
                     chain.proceed(chain.request().newBuilder().addHeader("Content-Type", "application/json; charset=utf-8").build())
+                    chain.proceed(chain.request().newBuilder().addHeader("Accept","application/json; charset=utf-8").build())
                 }
                 .addInterceptor(logging)
                 .build()
