@@ -20,6 +20,7 @@ import org.json.JSONArray
 class Tab2ViewModel(var context: Context) {
 
     fun getNews(view: View) {
+        view.progressbar.visibility=View.VISIBLE
         RetrofitClient()
                 .setRetrofit(Constants.NEWS_URL)
                 .getNews("kr", "sports", context.getString(R.string.news_apikey))
@@ -27,6 +28,7 @@ class Tab2ViewModel(var context: Context) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = {
+                            view.progressbar.visibility=View.GONE
                             if (it.totalResults == 20) {
                                 val jsonArray = JSONArray(Gson().toJson(it.articles))
                                 val contents_list: ArrayList<Articles> = ArrayList()
@@ -49,6 +51,7 @@ class Tab2ViewModel(var context: Context) {
                             }
                         },
                         onError = {
+                            view.progressbar.visibility=View.GONE
                             Log.e("zzzz", it.message)
                         }
                 )

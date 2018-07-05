@@ -9,13 +9,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitClient {
 
-    fun setRetrofit(url:String): RetrofitService {
+    fun setRetrofit(url: String): RetrofitService {
         val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient
                 .Builder()
-                .addInterceptor {chain->
-                    chain.proceed(chain.request().newBuilder().addHeader("Content-Type", "application/json; charset=utf-8").build())
-                    chain.proceed(chain.request().newBuilder().addHeader("Accept","application/json; charset=utf-8").build())
+                .addInterceptor { chain ->
+                    chain.proceed(chain.request()
+                            .newBuilder()
+                            .addHeader("Content-Type", "application/json; charset=utf-8")
+                            .build())
+                    chain.proceed(chain.request()
+                            .newBuilder()
+                            .addHeader("Accept", "application/json; charset=utf-8")
+                            .build())
                 }
                 .addInterceptor(logging)
                 .build()

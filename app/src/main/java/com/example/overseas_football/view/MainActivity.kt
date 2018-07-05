@@ -26,12 +26,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun abd(a:Int) : Int{
-        when(a){
-            1-> 2
-            2->3
-        }
-        return 4
-    }
 }
