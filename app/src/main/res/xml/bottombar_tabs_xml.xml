@@ -4,17 +4,17 @@
         <tab
             barColorWhenSelected="#1B64AA"
             icon="@drawable/icon_chat"
-            id="@+id/tab1_team"
+            id="@+id/tab1_community"
             title="해축갤" />
         <tab
             barColorWhenSelected="#ef0030"
             icon="@drawable/icon_chat"
-            id="@+id/tab2_match"
+            id="@+id/tab2_news"
             title="뉴스" />
         <tab
             barColorWhenSelected="#FFCD12"
             icon="@drawable/icon_schedule"
-            id="@+id/tab3_schedule"
+            id="@+id/tab3_myprofile"
             title="일정" />
     </tabs>
 </PreferenceScreen>

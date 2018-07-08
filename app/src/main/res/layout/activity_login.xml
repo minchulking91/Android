@@ -34,17 +34,9 @@
             android:id="@+id/textview_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/button_logout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:text="@{loginViewModel.textview_result}" />
 
-        <Button
-            android:id="@+id/button_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/button_google_auth"
-            android:layout_centerHorizontal="true"
-            android:onClick="@{(view)->loginViewModel.GoogleLogOut(view)}" />
     </RelativeLayout>
 </layout>

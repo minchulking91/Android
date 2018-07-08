@@ -10,6 +10,7 @@ import com.example.overseas_football.R
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.MainActivity
+import com.example.overseas_football.view.utill.Shared
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -27,7 +28,6 @@ class LoginViewModel(var activity: Activity) {
     }
 
     fun GoogleSessionCheck() {
-        Log.e("cc", "cc")
         textview_result.let {
             val user = FirebaseAuth.getInstance().currentUser
             if (null == user) {
@@ -39,17 +39,14 @@ class LoginViewModel(var activity: Activity) {
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                            Log.e("log", it["result"])
+                            Log.e("log", it.result)
+                            if (it.result == "success") {
+                                Log.e("user",it.User.toString())
+                                Shared().saveUser(activity, it.User)
+                                activity.finish()
+                            }
                         }
-
-                it.set(user.displayName)
-                activity.startActivity(Intent(activity, MainActivity::class.java))
             }
         }
-    }
-
-    fun GoogleLogOut(view: View) {
-        FirebaseAuth.getInstance().signOut()
-        textview_result.set("비로그인")
     }
 }
