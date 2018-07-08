@@ -16,11 +16,11 @@ class Tab2_News : Fragment() {
         val binding: Tab2Binding = DataBindingUtil.inflate(inflater!!, R.layout.tab2, container, false)
         tab2 = Tab2ViewModel(context)
         binding.tab2viewmodel = tab2
-        return binding.root
-    }
+        tab2.getNews(binding.root)
+        binding.swipelayout.setOnRefreshListener {
+            tab2.getNews(binding.root)
+        }
 
-    override fun onResume() {
-        super.onResume()
-        tab2.getNews(view)
+        return binding.root
     }
 }

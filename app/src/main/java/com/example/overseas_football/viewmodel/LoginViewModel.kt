@@ -1,6 +1,7 @@
 package com.example.overseas_football.viewmodel
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.databinding.ObservableField
@@ -10,6 +11,7 @@ import com.example.overseas_football.R
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.MainActivity
+import com.example.overseas_football.view.SignupActivity
 import com.example.overseas_football.view.utill.Shared
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -27,12 +29,13 @@ class LoginViewModel(var activity: Activity) {
                 .build())
     }
 
-    fun GoogleSessionCheck() {
+    fun GoogleLogin() {
         textview_result.let {
             val user = FirebaseAuth.getInstance().currentUser
             if (null == user) {
                 it.set("비로그인")
             } else {
+                Log.e("url",user.photoUrl.toString())
                 RetrofitClient()
                         .setRetrofit(Constants.BASE_URL)
                         .setResister(user.email!!, user.displayName!!, "google")
@@ -48,5 +51,8 @@ class LoginViewModel(var activity: Activity) {
                         }
             }
         }
+    }
+    fun SignUpActivity(view: View){
+        activity.startActivityForResult(Intent(activity,SignupActivity::class.java),RESULT_OK)
     }
 }

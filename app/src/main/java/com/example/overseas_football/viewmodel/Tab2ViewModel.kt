@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.tab2.*
 import kotlinx.android.synthetic.main.tab2.view.*
 import org.json.JSONArray
 
@@ -29,6 +30,7 @@ class Tab2ViewModel(var context: Context) {
                 .subscribeBy(
                         onNext = {
                             view.progressbar.visibility=View.GONE
+                            view.swipelayout.isRefreshing=false
                             if (it.totalResults == 20) {
                                 val jsonArray = JSONArray(Gson().toJson(it.articles))
                                 val contents_list: ArrayList<Articles> = ArrayList()
@@ -52,6 +54,7 @@ class Tab2ViewModel(var context: Context) {
                         },
                         onError = {
                             view.progressbar.visibility=View.GONE
+                            view.swipelayout.isRefreshing=false
                             Log.e("zzzz", it.message)
                         }
                 )

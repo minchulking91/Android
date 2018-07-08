@@ -24,16 +24,13 @@ class LoginActivity : AppCompatActivity() {
     private val loginViewModel = LoginViewModel(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bindinginit(loginViewModel)
+        (DataBindingUtil.setContentView(this, R.layout.activity_login) as ActivityLoginBinding).let {
+            it.loginViewModel = loginViewModel
+        }
 
         button_google_auth.setOnClickListener {
             startActivityForResult(loginViewModel.GetGoogleSignInClient(this).signInIntent, GOOGLE_LOGIN_RESULTCODE)
         }
-    }
-
-    fun bindinginit(loginViewModel: LoginViewModel) {
-        val binding: ActivityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-        binding.loginViewModel = loginViewModel
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -44,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
                 firebaseAuthWithGoogle(account)
             } catch (e: ApiException) {
-             Log.e("??",e.message)
+                Log.e("??", e.message)
             }
 
         }
@@ -59,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
                         val user = FirebaseAuth.getInstance().currentUser
                         user.let {
                             if (it != null) {
-                                loginViewModel.GoogleSessionCheck()
+                                loginViewModel.GoogleLogin()
                             }
                         }
                     } else {

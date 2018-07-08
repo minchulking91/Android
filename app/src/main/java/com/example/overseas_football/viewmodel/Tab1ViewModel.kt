@@ -19,20 +19,13 @@ class Tab1ViewModel(val activity: Activity) : ViewModel() {
     val user: ObservableParcelable<User> = ObservableParcelable()
     fun LoginActivity(view: View) {
         Log.e("??", "??")
-        activity.startActivityForResult(Intent(activity, LoginActivity::class.java), Constants.LOGIN_RESULT_OK)
-    }
-
-    fun FirebaseLogout(view: View) {
-        FirebaseAuth.getInstance().signOut()
+        activity.startActivity(Intent(activity, LoginActivity::class.java))
     }
 
     fun CheckLogin(context: Context) {
-        Log.e("onresume","sum")
         if (Shared().getUser(context) != null) {
-            Log.e("onresume","sum")
             activity.findViewById<LinearLayout>(R.id.lin_belogin).visibility = View.GONE
         } else {
-            Log.e("onresume","sum111111")
             activity.findViewById<LinearLayout>(R.id.lin_belogin).visibility = View.VISIBLE
         }
     }

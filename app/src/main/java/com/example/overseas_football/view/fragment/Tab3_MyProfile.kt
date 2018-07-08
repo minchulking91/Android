@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.overseas_football.R
-import com.example.overseas_football.databinding.Tab2Binding
 import com.example.overseas_football.databinding.Tab3Binding
-import com.example.overseas_football.viewmodel.Tab2ViewModel
 import com.example.overseas_football.viewmodel.Tab3ViewModel
 
 class Tab3_MyProfile : Fragment() {
@@ -23,5 +21,6 @@ class Tab3_MyProfile : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        tab3.checkLogin()
     }
 }
