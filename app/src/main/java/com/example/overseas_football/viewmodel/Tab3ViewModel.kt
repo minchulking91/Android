@@ -2,14 +2,17 @@ package com.example.overseas_football.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.example.overseas_football.R
-import com.example.overseas_football.network.Constants
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.view.utill.Utill
 import com.google.firebase.auth.FirebaseAuth
+import com.kakao.auth.Session
+import com.kakao.usermgmt.UserManagement
+import com.kakao.usermgmt.callback.LogoutResponseCallback
 
 class Tab3ViewModel(var activity: Activity) : Utill() {
     fun LoginActivity(view: View) {
@@ -21,6 +24,14 @@ class Tab3ViewModel(var activity: Activity) : Utill() {
                 .onPositive { dialog, which ->
                     if (FirebaseAuth.getInstance().currentUser != null) {
                         FirebaseAuth.getInstance().signOut()
+                    }
+                    if (Session.getCurrentSession().isOpened) {
+                        UserManagement.getInstance().requestLogout(object : LogoutResponseCallback() {
+                            override fun onCompleteLogout() {
+                                Log.e("kakao", "logout")
+                            }
+
+                        })
                     }
                     Shared().removeUser(activity)
                     checkLogin()

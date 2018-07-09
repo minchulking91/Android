@@ -19,6 +19,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import com.kakao.usermgmt.response.MeV2Response
+import com.kakao.network.ErrorResult
+import com.kakao.usermgmt.callback.MeV2ResponseCallback
+import com.kakao.usermgmt.UserManagement
+import com.kakao.util.helper.log.Logger
+import java.util.ArrayList
+
 
 class LoginViewModel(var activity: Activity) {
     val textview_result: ObservableField<String> by lazy { ObservableField<String>() }
@@ -58,6 +65,31 @@ class LoginViewModel(var activity: Activity) {
         }
     }
 
+     fun requestKakaoAuth() {
+        val keys = ArrayList<String>()
+        keys.add("properties.nickname")
+        keys.add("properties.profile_image")
+        keys.add("kakao_account.email")
+
+        UserManagement.getInstance().me(keys, object : MeV2ResponseCallback() {
+            override fun onFailure(errorResult: ErrorResult?) {
+                val message = "failed to get user info. msg=" + errorResult!!
+                Logger.d(message)
+            }
+
+            override fun onSessionClosed(errorResult: ErrorResult) {
+
+            }
+
+            override fun onSuccess(response: MeV2Response) {
+                Log.e("user nickname : ",""+ response.nickname)
+                Log.e("email: " ,""+  response.kakaoAccount.email)
+                Log.e("profile image: " ,""+  response.profileImagePath)
+
+            }
+
+        })
+    }
     fun SignUpActivity(view: View) {
         activity.startActivityForResult(Intent(activity, SignupActivity::class.java), RESULT_OK)
     }

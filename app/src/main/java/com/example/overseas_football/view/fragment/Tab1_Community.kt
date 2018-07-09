@@ -23,7 +23,6 @@ class Tab1_Community : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        checkLoginView(context, binding.linBelogin)
         tab1.CheckLogin(context)
     }
 }

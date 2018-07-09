@@ -12,6 +12,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.kakao.auth.ISessionCallback
+import com.kakao.auth.Session
+import com.kakao.util.exception.KakaoException
+import com.kakao.util.helper.log.Logger
 import kotlinx.android.synthetic.main.activity_login.*
 
 
@@ -20,6 +24,7 @@ class LoginActivity : BaseActivity() {
         const val GOOGLE_LOGIN_RESULTCODE = 9001
     }
 
+    private var callback: SessionCallback? = null
     private val loginViewModel = LoginViewModel(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +35,24 @@ class LoginActivity : BaseActivity() {
         button_google_auth.setOnClickListener {
             startActivityForResult(loginViewModel.GetGoogleSignInClient(this).signInIntent, GOOGLE_LOGIN_RESULTCODE)
         }
+
+        btn_kakao_auth.setOnClickListener {
+            callback = SessionCallback()
+            Session.getCurrentSession().addCallback(callback)
+            Session.getCurrentSession().checkAndImplicitOpen()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Session.getCurrentSession().removeCallback(callback)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            return
+        }
         if (requestCode == GOOGLE_LOGIN_RESULTCODE) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -61,5 +80,18 @@ class LoginActivity : BaseActivity() {
                         // If sign in fails, display a message to the user.
                     }
                 })
+    }
+
+    private inner class SessionCallback : ISessionCallback {
+
+        override fun onSessionOpened() {
+            loginViewModel.requestKakaoAuth()
+        }
+
+        override fun onSessionOpenFailed(exception: KakaoException?) {
+            if (exception != null) {
+                Logger.e(exception)
+            }
+        }
     }
 }

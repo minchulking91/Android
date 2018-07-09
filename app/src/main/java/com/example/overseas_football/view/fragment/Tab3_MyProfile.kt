@@ -22,6 +22,6 @@ class Tab3_MyProfile : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        checkLoginView(context, binding.linearLayoutLogin, binding.linearLayoutBeLogin)
+        tab3.checkLogin()
     }
 }

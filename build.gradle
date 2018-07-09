@@ -20,6 +20,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+        //필요한 기능 라이브러리만 사용하여 앱파일 크기를 줄일 수 있습니다.
+        mavenCentral()
+        maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
     }
 }
 
