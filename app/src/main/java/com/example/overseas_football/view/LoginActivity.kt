@@ -3,7 +3,6 @@ package com.example.overseas_football.view
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityLoginBinding
@@ -16,7 +15,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
     companion object {
         const val GOOGLE_LOGIN_RESULTCODE = 9001
     }
@@ -43,7 +42,6 @@ class LoginActivity : AppCompatActivity() {
             } catch (e: ApiException) {
                 Log.e("??", e.message)
             }
-
         }
     }
 

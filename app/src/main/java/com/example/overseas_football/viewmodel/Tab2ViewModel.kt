@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import com.example.overseas_football.R
 import com.example.overseas_football.model.Articles
-import com.example.overseas_football.model.NewsResModel
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.adapter.NewsAdapter
@@ -14,14 +13,13 @@ import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.tab2.*
 import kotlinx.android.synthetic.main.tab2.view.*
 import org.json.JSONArray
 
 class Tab2ViewModel(var context: Context) {
 
     fun getNews(view: View) {
-        view.progressbar.visibility=View.VISIBLE
+        view.swipelayout.isRefreshing = true
         RetrofitClient()
                 .setRetrofit(Constants.NEWS_URL)
                 .getNews("kr", "sports", context.getString(R.string.news_apikey))
@@ -29,23 +27,21 @@ class Tab2ViewModel(var context: Context) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = {
-                            view.progressbar.visibility=View.GONE
-                            view.swipelayout.isRefreshing=false
+                            view.swipelayout.isRefreshing = false
                             if (it.totalResults == 20) {
                                 val jsonArray = JSONArray(Gson().toJson(it.articles))
                                 val contents_list: ArrayList<Articles> = ArrayList()
                                 for (x in 0 until jsonArray.length()) {
                                     val jsonObject = jsonArray.getJSONObject(x)
 
-                                    val author = jsonObject.optString("author","null")
-                                    val title = jsonObject.optString("title","null")
-                                    val description = jsonObject.optString("description","null")
-                                    val url = jsonObject.optString("url","null")
-                                    val urlToImage = jsonObject.optString("urlToImage","null")
-                                    val publishedAt = jsonObject.optString("publishedAt","null")
+                                    val author = jsonObject.optString("author", "null")
+                                    val title = jsonObject.optString("title", "null")
+                                    val description = jsonObject.optString("description", "null")
+                                    val url = jsonObject.optString("url", "null")
+                                    val urlToImage = jsonObject.optString("urlToImage", "null")
+                                    val publishedAt = jsonObject.optString("publishedAt", "null")
                                     contents_list.add(Articles(author, title, description, url, urlToImage, publishedAt, null))
                                 }
-                                Log.e("확인", contents_list.size.toString())
                                 view.news_recyclerview.layoutManager = LinearLayoutManager(context)
                                 view.news_recyclerview.adapter = NewsAdapter(context, contents_list)
                             } else {
@@ -53,8 +49,7 @@ class Tab2ViewModel(var context: Context) {
                             }
                         },
                         onError = {
-                            view.progressbar.visibility=View.GONE
-                            view.swipelayout.isRefreshing=false
+                            view.swipelayout.isRefreshing = false
                             Log.e("zzzz", it.message)
                         }
                 )

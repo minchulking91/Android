@@ -10,7 +10,7 @@ import android.view.View
 import com.example.overseas_football.R
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
-import com.example.overseas_football.view.MainActivity
+import com.example.overseas_football.view.LoginActivity
 import com.example.overseas_football.view.SignupActivity
 import com.example.overseas_football.view.utill.Shared
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -22,6 +22,11 @@ import io.reactivex.schedulers.Schedulers
 
 class LoginViewModel(var activity: Activity) {
     val textview_result: ObservableField<String> by lazy { ObservableField<String>() }
+
+    init {
+//        (activity as LoginActivity).setToolbarTile(activity,"로그인")
+    }
+
     fun GetGoogleSignInClient(context: Context): GoogleSignInClient {
         return GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.default_web_client_id))
@@ -35,7 +40,7 @@ class LoginViewModel(var activity: Activity) {
             if (null == user) {
                 it.set("비로그인")
             } else {
-                Log.e("url",user.photoUrl.toString())
+                Log.e("url", user.photoUrl.toString())
                 RetrofitClient()
                         .setRetrofit(Constants.BASE_URL)
                         .setResister(user.email!!, user.displayName!!, "google")
@@ -44,7 +49,7 @@ class LoginViewModel(var activity: Activity) {
                         .subscribe {
                             Log.e("log", it.result)
                             if (it.result == "success") {
-                                Log.e("user",it.User.toString())
+                                Log.e("user", it.User.toString())
                                 Shared().saveUser(activity, it.User)
                                 activity.finish()
                             }
@@ -52,7 +57,8 @@ class LoginViewModel(var activity: Activity) {
             }
         }
     }
-    fun SignUpActivity(view: View){
-        activity.startActivityForResult(Intent(activity,SignupActivity::class.java),RESULT_OK)
+
+    fun SignUpActivity(view: View) {
+        activity.startActivityForResult(Intent(activity, SignupActivity::class.java), RESULT_OK)
     }
 }

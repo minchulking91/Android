@@ -1,21 +1,16 @@
 package com.example.overseas_football.view
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityMainBinding
-import com.example.overseas_football.model.User
-import com.example.overseas_football.network.Constants
 import com.example.overseas_football.view.fragment.Tab1_Community
 import com.example.overseas_football.view.fragment.Tab2_News
 import com.example.overseas_football.view.fragment.Tab3_MyProfile
-import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.viewmodel.MainViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     val mainViewModel = MainViewModel()
 
     val tab1_Community = Tab1_Community()
