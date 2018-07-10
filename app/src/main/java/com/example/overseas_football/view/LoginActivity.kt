@@ -35,12 +35,9 @@ class LoginActivity : BaseActivity() {
         button_google_auth.setOnClickListener {
             startActivityForResult(loginViewModel.GetGoogleSignInClient(this).signInIntent, GOOGLE_LOGIN_RESULTCODE)
         }
-
-        btn_kakao_auth.setOnClickListener {
-            callback = SessionCallback()
-            Session.getCurrentSession().addCallback(callback)
-            Session.getCurrentSession().checkAndImplicitOpen()
-        }
+        callback = SessionCallback()
+        Session.getCurrentSession().addCallback(callback)
+        Session.getCurrentSession().checkAndImplicitOpen()
     }
 
     override fun onDestroy() {
@@ -85,6 +82,7 @@ class LoginActivity : BaseActivity() {
     private inner class SessionCallback : ISessionCallback {
 
         override fun onSessionOpened() {
+            Log.e("??!", "세션오픈")
             loginViewModel.requestKakaoAuth()
         }
 

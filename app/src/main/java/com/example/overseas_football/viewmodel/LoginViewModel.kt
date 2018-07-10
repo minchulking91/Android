@@ -1,33 +1,29 @@
 package com.example.overseas_football.viewmodel
 
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.Context
-import android.content.Intent
 import android.databinding.ObservableField
 import android.util.Log
-import android.view.View
 import com.example.overseas_football.R
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
-import com.example.overseas_football.view.LoginActivity
-import com.example.overseas_football.view.SignupActivity
 import com.example.overseas_football.view.utill.Shared
+import com.example.overseas_football.view.utill.Utill
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import com.kakao.usermgmt.response.MeV2Response
 import com.kakao.network.ErrorResult
-import com.kakao.usermgmt.callback.MeV2ResponseCallback
 import com.kakao.usermgmt.UserManagement
-import com.kakao.util.helper.log.Logger
-import java.util.ArrayList
+import com.kakao.usermgmt.callback.MeV2ResponseCallback
+import com.kakao.usermgmt.response.MeV2Response
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 
-class LoginViewModel(var activity: Activity) {
+class LoginViewModel(var activity: Activity) : Utill() {
     val textview_result: ObservableField<String> by lazy { ObservableField<String>() }
 
     init {
@@ -47,25 +43,31 @@ class LoginViewModel(var activity: Activity) {
             if (null == user) {
                 it.set("비로그인")
             } else {
-                Log.e("url", user.photoUrl.toString())
+                startProgressBar(activity.findViewById(R.id.progress_bar))
                 RetrofitClient()
                         .setRetrofit(Constants.BASE_URL)
                         .setResister(user.email!!, user.displayName!!, "google")
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            Log.e("log", it.result)
-                            if (it.result == "success") {
-                                Log.e("user", it.User.toString())
-                                Shared().saveUser(activity, it.User)
-                                activity.finish()
-                            }
-                        }
+                        .subscribeBy(
+                                onNext = {
+                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
+                                    if (it.result == "success") {
+                                        Log.e("user", it.User.toString())
+                                        Shared().saveUser(activity, it.User)
+                                        activity.finish()
+                                    }
+                                },
+                                onError = {
+                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
+                                }
+
+                        )
             }
         }
     }
 
-     fun requestKakaoAuth() {
+    fun requestKakaoAuth() {
         val keys = ArrayList<String>()
         keys.add("properties.nickname")
         keys.add("properties.profile_image")
@@ -74,23 +76,32 @@ class LoginViewModel(var activity: Activity) {
         UserManagement.getInstance().me(keys, object : MeV2ResponseCallback() {
             override fun onFailure(errorResult: ErrorResult?) {
                 val message = "failed to get user info. msg=" + errorResult!!
-                Logger.d(message)
             }
 
             override fun onSessionClosed(errorResult: ErrorResult) {
-
             }
 
             override fun onSuccess(response: MeV2Response) {
-                Log.e("user nickname : ",""+ response.nickname)
-                Log.e("email: " ,""+  response.kakaoAccount.email)
-                Log.e("profile image: " ,""+  response.profileImagePath)
+                startProgressBar(activity.findViewById(R.id.progress_bar))
+                Log.e("user nickname : ", "" + response.nickname)
+                Log.e("email: ", "" + response.kakaoAccount.email)
+                Log.e("profile image: ", "" + response.profileImagePath)
+                RetrofitClient()
+                        .setRetrofit(Constants.BASE_URL)
+                        .setResister(response.kakaoAccount.email, response.nickname, "kakao")
+                        .observeOn(Schedulers.io())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(
+                                onNext = {
+                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
 
+                                },
+                                onError = {
+                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
+
+                                }
+                        )
             }
-
         })
-    }
-    fun SignUpActivity(view: View) {
-        activity.startActivityForResult(Intent(activity, SignupActivity::class.java), RESULT_OK)
     }
 }
