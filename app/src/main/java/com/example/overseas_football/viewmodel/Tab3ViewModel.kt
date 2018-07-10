@@ -2,11 +2,13 @@ package com.example.overseas_football.viewmodel
 
 import android.app.Activity
 import android.content.Intent
+import android.databinding.ObservableField
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.example.overseas_football.R
+import com.example.overseas_football.model.User
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.view.utill.Utill
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +17,7 @@ import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.LogoutResponseCallback
 
 class Tab3ViewModel(var activity: Activity) : Utill() {
+    val tv_nickname: ObservableField<String> by lazy { ObservableField<String>() }
     fun LoginActivity(view: View) {
         activity.startActivity(Intent(activity, com.example.overseas_football.view.LoginActivity::class.java))
     }
@@ -40,7 +43,9 @@ class Tab3ViewModel(var activity: Activity) : Utill() {
     }
 
     fun checkLogin() {
-        if (Shared().getUser(activity) != null) {
+        val user: User? = Shared().getUser(activity)
+        if (user != null) {
+            tv_nickname.set(user.nickname)
             activity.findViewById<LinearLayout>(R.id.linearLayout_Login).visibility = View.VISIBLE
             activity.findViewById<LinearLayout>(R.id.linearLayout_beLogin).visibility = View.GONE
         } else {

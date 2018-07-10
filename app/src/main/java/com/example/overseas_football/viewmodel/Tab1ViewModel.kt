@@ -14,6 +14,7 @@ import com.example.overseas_football.network.Constants
 import com.example.overseas_football.view.LoginActivity
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.view.utill.Utill
+import com.github.clans.fab.FloatingActionMenu
 import com.google.firebase.auth.FirebaseAuth
 
 class Tab1ViewModel(val activity: Activity) : ViewModel() {
@@ -26,8 +27,10 @@ class Tab1ViewModel(val activity: Activity) : ViewModel() {
     fun CheckLogin(context: Context) {
         if (Shared().getUser(context) != null) {
             activity.findViewById<LinearLayout>(R.id.lin_belogin).visibility = View.GONE
+            activity.findViewById<FloatingActionMenu>(R.id.floating_menu_button).visibility = View.VISIBLE
         } else {
             activity.findViewById<LinearLayout>(R.id.lin_belogin).visibility = View.VISIBLE
+            activity.findViewById<FloatingActionMenu>(R.id.floating_menu_button).visibility = View.GONE
         }
     }
 }

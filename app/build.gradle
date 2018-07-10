@@ -84,4 +84,7 @@ dependencies {
 
     //material
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+
+    //Floating button
+    implementation 'com.github.clans:fab:1.6.4'
 }

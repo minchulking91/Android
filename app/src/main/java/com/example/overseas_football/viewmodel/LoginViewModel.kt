@@ -68,6 +68,7 @@ class LoginViewModel(var activity: Activity) : Utill() {
     }
 
     fun requestKakaoAuth() {
+        startProgressBar(activity.findViewById(R.id.progress_bar))
         val keys = ArrayList<String>()
         keys.add("properties.nickname")
         keys.add("properties.profile_image")
@@ -82,23 +83,24 @@ class LoginViewModel(var activity: Activity) : Utill() {
             }
 
             override fun onSuccess(response: MeV2Response) {
-                startProgressBar(activity.findViewById(R.id.progress_bar))
                 Log.e("user nickname : ", "" + response.nickname)
                 Log.e("email: ", "" + response.kakaoAccount.email)
-                Log.e("profile image: ", "" + response.profileImagePath)
+                //카카오 이메일 Null 인경우 예외처리 필요함
                 RetrofitClient()
                         .setRetrofit(Constants.BASE_URL)
                         .setResister(response.kakaoAccount.email, response.nickname, "kakao")
-                        .observeOn(Schedulers.io())
-                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy(
                                 onNext = {
-                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
-
+                                    if (it.result == "success") {
+                                        finishProgessBar(activity.findViewById(R.id.progress_bar))
+                                        Shared().saveUser(activity, it.User)
+                                        activity.finish()
+                                    }
                                 },
                                 onError = {
                                     finishProgessBar(activity.findViewById(R.id.progress_bar))
-
                                 }
                         )
             }

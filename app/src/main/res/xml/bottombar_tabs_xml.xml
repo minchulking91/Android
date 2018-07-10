@@ -8,13 +8,13 @@
             title="해축갤" />
         <tab
             barColorWhenSelected="#ef0030"
-            icon="@drawable/icon_chat"
+            icon="@drawable/news"
             id="@+id/tab2_news"
             title="뉴스" />
         <tab
             barColorWhenSelected="#FFCD12"
-            icon="@drawable/icon_schedule"
+            icon="@drawable/profile"
             id="@+id/tab3_myprofile"
-            title="일정" />
+            title="내정보" />
     </tabs>
 </PreferenceScreen>
