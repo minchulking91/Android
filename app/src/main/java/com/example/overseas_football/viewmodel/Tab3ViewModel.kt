@@ -1,6 +1,7 @@
 package com.example.overseas_football.viewmodel
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.databinding.ObservableField
 import android.util.Log
@@ -8,16 +9,31 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.example.overseas_football.R
+import com.example.overseas_football.databinding.Tab3Binding
 import com.example.overseas_football.model.User
+import com.example.overseas_football.network.Constants
+import com.example.overseas_football.network.RetrofitClient
+import com.example.overseas_football.view.fragment.Tab3_MyProfile
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.view.utill.Utill
 import com.google.firebase.auth.FirebaseAuth
 import com.kakao.auth.Session
 import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.LogoutResponseCallback
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
-class Tab3ViewModel(var activity: Activity) : Utill() {
+class Tab3ViewModel(var activity: Activity, var context: Context, var tab3_MyProfile: Tab3_MyProfile) : Utill() {
     val tv_nickname: ObservableField<String> by lazy { ObservableField<String>() }
+    fun setProfileImage() {
+        CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(context, tab3_MyProfile)
+    }
+
     fun LoginActivity(view: View) {
         activity.startActivity(Intent(activity, com.example.overseas_football.view.LoginActivity::class.java))
     }
@@ -52,5 +68,17 @@ class Tab3ViewModel(var activity: Activity) : Utill() {
             activity.findViewById<LinearLayout>(R.id.linearLayout_Login).visibility = View.GONE
             activity.findViewById<LinearLayout>(R.id.linearLayout_beLogin).visibility = View.VISIBLE
         }
+    }
+
+    fun setProfileImage(imagefile: MultipartBody.Part, email: RequestBody) {
+        RetrofitClient()
+                .setRetrofit(Constants.BASE_URL)
+                .setProfileImage(imagefile, email)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onNext = { Log.e("rer", it.result) },
+                        onError = { Log.e("wrwer", it.message) }
+                )
     }
 }
