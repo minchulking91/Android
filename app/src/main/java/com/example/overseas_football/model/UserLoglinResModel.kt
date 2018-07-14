@@ -11,10 +11,10 @@ data class UserLoginResModel(
 )
 
 data class User(
-    val email: String,
-    val nickname: String,
-    val img: String="",
-    val division: String
+        val email: String,
+        val nickname: String,
+        var img: String="",
+        val division: String
 ): Parcelable, BaseObservable() {
     constructor(parcel: Parcel) : this(
             parcel.readString(),

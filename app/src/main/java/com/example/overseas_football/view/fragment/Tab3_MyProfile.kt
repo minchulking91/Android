@@ -4,14 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.Tab3Binding
-import com.example.overseas_football.network.Constants
-import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.BaseFragment
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.viewmodel.Tab3ViewModel
@@ -20,8 +17,6 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import com.kakao.auth.StringSet.file
-import com.kakao.auth.StringSet.file
 
 
 class Tab3_MyProfile : BaseFragment() {

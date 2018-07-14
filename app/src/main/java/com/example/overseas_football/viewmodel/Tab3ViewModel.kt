@@ -8,8 +8,8 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.overseas_football.R
-import com.example.overseas_football.databinding.Tab3Binding
 import com.example.overseas_football.model.User
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
@@ -22,6 +22,7 @@ import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.LogoutResponseCallback
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
+import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -64,6 +65,15 @@ class Tab3ViewModel(var activity: Activity, var context: Context, var tab3_MyPro
             tv_nickname.set(user.nickname)
             activity.findViewById<LinearLayout>(R.id.linearLayout_Login).visibility = View.VISIBLE
             activity.findViewById<LinearLayout>(R.id.linearLayout_beLogin).visibility = View.GONE
+            //사용자 프로필 이미지 유무
+            if (user.img.isNotEmpty()) {
+                activity.findViewById<CircleImageView>(R.id.circleimgview_profile).background=null
+                Glide.with(activity)
+                        .load(Constants.BASE_URL + "glideProfile?img=" + user.img)
+                        .into(activity.findViewById<CircleImageView>(R.id.circleimgview_profile))
+            } else {
+                activity.findViewById<CircleImageView>(R.id.circleimgview_profile).visibility = View.VISIBLE
+            }
         } else {
             activity.findViewById<LinearLayout>(R.id.linearLayout_Login).visibility = View.GONE
             activity.findViewById<LinearLayout>(R.id.linearLayout_beLogin).visibility = View.VISIBLE
@@ -77,7 +87,17 @@ class Tab3ViewModel(var activity: Activity, var context: Context, var tab3_MyPro
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
-                        onNext = { Log.e("rer", it.result) },
+                        onNext = {
+                            val user = Shared().getUser(context)
+                            if (user != null) {
+                                user.img = it.message
+                                val circleImgviewProfile: CircleImageView = activity.findViewById(R.id.circleimgview_profile)
+                                circleImgviewProfile.visibility = View.GONE
+                                Glide.with(activity)
+                                        .load(Constants.BASE_URL + "glideProfile?img=" + it.message)
+                                        .into(circleImgviewProfile)
+                            }
+                        },
                         onError = { Log.e("wrwer", it.message) }
                 )
     }
