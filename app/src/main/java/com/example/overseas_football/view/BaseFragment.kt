@@ -1,10 +1,7 @@
 package com.example.overseas_football.view
 
-import android.app.Fragment
-import android.content.Context
-import android.view.View
-import android.widget.LinearLayout
-import com.example.overseas_football.view.utill.Shared
+
+import android.support.v4.app.Fragment
 
 open class BaseFragment : Fragment() {
 

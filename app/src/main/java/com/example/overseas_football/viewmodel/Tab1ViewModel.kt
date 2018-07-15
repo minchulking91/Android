@@ -10,15 +10,12 @@ import android.view.View
 import android.widget.LinearLayout
 import com.example.overseas_football.R
 import com.example.overseas_football.model.User
-import com.example.overseas_football.network.Constants
 import com.example.overseas_football.view.LoginActivity
 import com.example.overseas_football.view.utill.Shared
-import com.example.overseas_football.view.utill.Utill
 import com.github.clans.fab.FloatingActionMenu
-import com.google.firebase.auth.FirebaseAuth
 
 class Tab1ViewModel(val activity: Activity) : ViewModel() {
-    val user: ObservableParcelable<User> = ObservableParcelable()
+    var user: ObservableParcelable<User> = ObservableParcelable()
     fun LoginActivity(view: View) {
         Log.e("??", "??")
         activity.startActivity(Intent(activity, LoginActivity::class.java))

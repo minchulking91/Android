@@ -1,5 +1,6 @@
 package com.example.overseas_football.viewmodel
 
+import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -9,6 +10,7 @@ import com.example.overseas_football.model.Articles
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.adapter.NewsAdapter
+import com.example.overseas_football.view.utill.BaseViewModel
 import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -16,7 +18,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.tab2.view.*
 import org.json.JSONArray
 
-class Tab2ViewModel(var context: Context) {
+class Tab2ViewModel(var context: Context) : BaseViewModel(){
 
     fun getNews(view: View) {
         view.swipelayout.isRefreshing = true

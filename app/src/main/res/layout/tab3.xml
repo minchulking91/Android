@@ -11,7 +11,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#ffff">
 
         <LinearLayout
             android:id="@+id/linearLayout_Login"
@@ -33,8 +34,8 @@
                 android:id="@+id/circleimgview_profile"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:onClick="@{()->Tab3ViewModel.setProfileImage()}"
-                android:background="@drawable/defalut_profile_img" />
+                android:background="@drawable/defalut_profile_img"
+                android:onClick="@{()->Tab3ViewModel.setProfileImage()}" />
 
             <TextView
                 android:id="@+id/tv_nickname"
@@ -42,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="@{Tab3ViewModel.tv_nickname}"
                 android:textSize="14dp"
                 android:textStyle="bold" />
 

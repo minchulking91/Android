@@ -2,6 +2,7 @@ package com.example.overseas_football.view
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityMainBinding
 import com.example.overseas_football.view.fragment.Tab1_Community
@@ -23,9 +24,9 @@ class MainActivity : BaseActivity() {
 
         binding.mainActivity = mainViewModel
         binding.bottombar.setOnTabSelectListener { tabId ->
-            val transaction = fragmentManager.beginTransaction()
+            val transaction = supportFragmentManager.beginTransaction()
             when (tabId) {
-                R.id.tab1_community -> transaction.replace(R.id.framelayout, tab1_Community).commit()
+                R.id.tab1_community -> transaction.replace(R.id.framelayout, tab1_Community as Fragment).commit()
                 R.id.tab2_news -> transaction.replace(R.id.framelayout, tab2_News).commit()
                 R.id.tab3_myprofile -> transaction.replace(R.id.framelayout, tab3_MyProfile).commit()
             }

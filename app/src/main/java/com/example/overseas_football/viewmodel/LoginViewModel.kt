@@ -1,12 +1,15 @@
 package com.example.overseas_football.viewmodel
 
 import android.app.Activity
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.databinding.ObservableField
 import android.util.Log
 import com.example.overseas_football.R
+import com.example.overseas_football.model.User
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
+import com.example.overseas_football.view.utill.BaseViewModel
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.view.utill.Utill
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -23,8 +26,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 
-class LoginViewModel(var activity: Activity) : Utill() {
-    val textview_result: ObservableField<String> by lazy { ObservableField<String>() }
+class LoginViewModel(var activity: Activity) : BaseViewModel() {
 
     init {
 //        (activity as LoginActivity).setToolbarTile(activity,"로그인")
@@ -38,32 +40,31 @@ class LoginViewModel(var activity: Activity) : Utill() {
     }
 
     fun GoogleLogin() {
-        textview_result.let {
-            val user = FirebaseAuth.getInstance().currentUser
-            if (null == user) {
-                it.set("비로그인")
-            } else {
-                startProgressBar(activity.findViewById(R.id.progress_bar))
-                RetrofitClient()
-                        .setRetrofit(Constants.BASE_URL)
-                        .setResister(user.email!!, user.displayName!!, "google")
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeBy(
-                                onNext = {
-                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
-                                    if (it.result == "success") {
-                                        Log.e("user", it.User.toString())
-                                        Shared().saveUser(activity, it.User)
-                                        activity.finish()
-                                    }
-                                },
-                                onError = {
-                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
-                                }
+        val user = FirebaseAuth.getInstance().currentUser
+        if (null == user) {
 
-                        )
-            }
+        } else {
+            startProgressBar(activity.findViewById(R.id.progress_bar))
+            RetrofitClient()
+                    .setRetrofit(Constants.BASE_URL)
+                    .setResister(user.email!!, user.displayName!!, "google")
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onNext = {
+                                finishProgessBar(activity.findViewById(R.id.progress_bar))
+                                if (it.result == "success") {
+                                    if (Shared().getUser(activity) != null) {
+                                        Shared().removeUser(activity)
+                                    }
+                                    Shared().saveUser(activity, it.User)
+                                    activity.finish()
+                                }
+                            },
+                            onError = {
+                                finishProgessBar(activity.findViewById(R.id.progress_bar))
+                            }
+                    )
         }
     }
 
@@ -95,6 +96,9 @@ class LoginViewModel(var activity: Activity) : Utill() {
                                 onNext = {
                                     if (it.result == "success") {
                                         finishProgessBar(activity.findViewById(R.id.progress_bar))
+                                        if (Shared().getUser(activity) != null) {
+                                            Shared().removeUser(activity)
+                                        }
                                         Shared().saveUser(activity, it.User)
                                         activity.finish()
                                     }

@@ -13,7 +13,7 @@ data class UserLoginResModel(
 data class User(
         val email: String,
         val nickname: String,
-        var img: String="",
+        var img: String?=null,
         val division: String
 ): Parcelable, BaseObservable() {
     constructor(parcel: Parcel) : this(

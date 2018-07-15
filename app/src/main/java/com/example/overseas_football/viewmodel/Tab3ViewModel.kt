@@ -1,9 +1,12 @@
 package com.example.overseas_football.viewmodel
 
 import android.app.Activity
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.content.Intent
 import android.databinding.ObservableField
+import android.support.v4.app.FragmentActivity
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
@@ -14,6 +17,7 @@ import com.example.overseas_football.model.User
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.fragment.Tab3_MyProfile
+import com.example.overseas_football.view.utill.BaseViewModel
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.view.utill.Utill
 import com.google.firebase.auth.FirebaseAuth
@@ -29,8 +33,8 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
-class Tab3ViewModel(var activity: Activity, var context: Context, var tab3_MyProfile: Tab3_MyProfile) : Utill() {
-    val tv_nickname: ObservableField<String> by lazy { ObservableField<String>() }
+class Tab3ViewModel(var activity: Activity, var context: Context, var tab3_MyProfile: Tab3_MyProfile) : BaseViewModel() {
+    val user = MutableLiveData<User>()
     fun setProfileImage() {
         CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(context, tab3_MyProfile)
     }
@@ -60,24 +64,7 @@ class Tab3ViewModel(var activity: Activity, var context: Context, var tab3_MyPro
     }
 
     fun checkLogin() {
-        val user: User? = Shared().getUser(activity)
-        if (user != null) {
-            tv_nickname.set(user.nickname)
-            activity.findViewById<LinearLayout>(R.id.linearLayout_Login).visibility = View.VISIBLE
-            activity.findViewById<LinearLayout>(R.id.linearLayout_beLogin).visibility = View.GONE
-            //사용자 프로필 이미지 유무
-            if (user.img.isNotEmpty()) {
-                activity.findViewById<CircleImageView>(R.id.circleimgview_profile).background=null
-                Glide.with(activity)
-                        .load(Constants.BASE_URL + "glideProfile?img=" + user.img)
-                        .into(activity.findViewById<CircleImageView>(R.id.circleimgview_profile))
-            } else {
-                activity.findViewById<CircleImageView>(R.id.circleimgview_profile).visibility = View.VISIBLE
-            }
-        } else {
-            activity.findViewById<LinearLayout>(R.id.linearLayout_Login).visibility = View.GONE
-            activity.findViewById<LinearLayout>(R.id.linearLayout_beLogin).visibility = View.VISIBLE
-        }
+        user.value = Shared().getUser(activity)
     }
 
     fun setProfileImage(imagefile: MultipartBody.Part, email: RequestBody) {

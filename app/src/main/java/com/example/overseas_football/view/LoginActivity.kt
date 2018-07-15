@@ -1,5 +1,9 @@
 package com.example.overseas_football.view
 
+import android.app.Activity
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -7,6 +11,7 @@ import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityLoginBinding
 import com.example.overseas_football.viewmodel.LoginViewModel
+import com.example.overseas_football.viewmodel.Tab1ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
@@ -25,15 +30,25 @@ class LoginActivity : BaseActivity() {
     }
 
     private var callback: SessionCallback? = null
-    private val loginViewModel = LoginViewModel(this)
+    private val viewmodel: LoginViewModel by lazy {
+        ViewModelProviders.of(this,ViewModelFactory(this)).get(LoginViewModel::class.java)
+    }
+
+    inner class ViewModelFactory(private val activity: Activity) : ViewModelProvider.NewInstanceFactory() {
+
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return LoginViewModel(activity) as T
+        }
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (DataBindingUtil.setContentView(this, R.layout.activity_login) as ActivityLoginBinding).let {
-            it.loginViewModel = loginViewModel
+            it.loginViewModel = viewmodel
         }
 
         button_google_auth.setOnClickListener {
-            startActivityForResult(loginViewModel.GetGoogleSignInClient(this).signInIntent, GOOGLE_LOGIN_RESULTCODE)
+            startActivityForResult(viewmodel.GetGoogleSignInClient(this).signInIntent, GOOGLE_LOGIN_RESULTCODE)
         }
         callback = SessionCallback()
         Session.getCurrentSession().addCallback(callback)
@@ -70,7 +85,7 @@ class LoginActivity : BaseActivity() {
                         val user = FirebaseAuth.getInstance().currentUser
                         user.let {
                             if (it != null) {
-                                loginViewModel.GoogleLogin()
+                                viewmodel.GoogleLogin()
                             }
                         }
                     } else {
@@ -82,8 +97,7 @@ class LoginActivity : BaseActivity() {
     private inner class SessionCallback : ISessionCallback {
 
         override fun onSessionOpened() {
-            Log.e("??!", "세션오픈")
-            loginViewModel.requestKakaoAuth()
+            viewmodel.requestKakaoAuth()
         }
 
         override fun onSessionOpenFailed(exception: KakaoException?) {
