@@ -3,6 +3,7 @@ package com.example.overseas_football.view
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityMainBinding
 import com.example.overseas_football.view.fragment.Tab1_Community
@@ -30,6 +31,13 @@ class MainActivity : BaseActivity() {
                 R.id.tab2_news -> transaction.replace(R.id.framelayout, tab2_News).commit()
                 R.id.tab3_myprofile -> transaction.replace(R.id.framelayout, tab3_MyProfile).commit()
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(isExistUser()){
+
         }
     }
 }

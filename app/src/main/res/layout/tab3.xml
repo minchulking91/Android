@@ -24,6 +24,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:orientation="vertical"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -31,11 +32,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/circleimgview_profile"
+                android:id="@+id/circleimg_profile"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                android:background="@drawable/defalut_profile_img"
-                android:onClick="@{()->Tab3ViewModel.setProfileImage()}" />
+                android:background="@drawable/defalut_profile_img" />
 
             <TextView
                 android:id="@+id/tv_nickname"
@@ -57,7 +57,6 @@
                 android:id="@+id/btn_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="@{(view)->Tab3ViewModel.onclick(view)}"
                 android:text="로그아웃" />
         </LinearLayout>
 
@@ -88,11 +87,10 @@
                 android:text="로그인시 이용 가능합니다." />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_login_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:onClick="@{(view)->Tab3ViewModel.LoginActivity(view)}"
                 android:text="로그인 이동하기" />
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>

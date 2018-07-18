@@ -11,23 +11,10 @@ import android.widget.LinearLayout
 import com.example.overseas_football.R
 import com.example.overseas_football.model.User
 import com.example.overseas_football.view.LoginActivity
+import com.example.overseas_football.view.utill.BaseViewModel
 import com.example.overseas_football.view.utill.Shared
 import com.github.clans.fab.FloatingActionMenu
 
-class Tab1ViewModel(val activity: Activity) : ViewModel() {
-    var user: ObservableParcelable<User> = ObservableParcelable()
-    fun LoginActivity(view: View) {
-        Log.e("??", "??")
-        activity.startActivity(Intent(activity, LoginActivity::class.java))
-    }
+class Tab1ViewModel: BaseViewModel() {
 
-    fun CheckLogin(context: Context) {
-        if (Shared().getUser(context) != null) {
-            activity.findViewById<LinearLayout>(R.id.lin_belogin).visibility = View.GONE
-            activity.findViewById<FloatingActionMenu>(R.id.floating_menu_button).visibility = View.VISIBLE
-        } else {
-            activity.findViewById<LinearLayout>(R.id.lin_belogin).visibility = View.VISIBLE
-            activity.findViewById<FloatingActionMenu>(R.id.floating_menu_button).visibility = View.GONE
-        }
-    }
 }

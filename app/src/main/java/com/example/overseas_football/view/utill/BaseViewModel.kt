@@ -8,7 +8,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 
 open class BaseViewModel:ViewModel(){
 
-     open fun openBasicDialog(context: Context, title: String, content: String): MaterialDialog.Builder {
+     fun openBasicDialog(context: Context, title: String, content: String): MaterialDialog.Builder {
         return MaterialDialog.Builder(context)
                 .title(title)
                 .content(content)

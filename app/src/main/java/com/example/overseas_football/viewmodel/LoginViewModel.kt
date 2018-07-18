@@ -1,17 +1,13 @@
 package com.example.overseas_football.viewmodel
 
-import android.app.Activity
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
-import android.databinding.ObservableField
 import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.model.User
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.network.RetrofitClient
 import com.example.overseas_football.view.utill.BaseViewModel
-import com.example.overseas_football.view.utill.Shared
-import com.example.overseas_football.view.utill.Utill
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,15 +17,28 @@ import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.MeV2ResponseCallback
 import com.kakao.usermgmt.response.MeV2Response
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 
-class LoginViewModel(var activity: Activity) : BaseViewModel() {
+class LoginViewModel : BaseViewModel() {
+    val userdata = MutableLiveData<User>()
+    fun GoogleLogin() {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (null == user) {
 
-    init {
-//        (activity as LoginActivity).setToolbarTile(activity,"로그인")
+        } else {
+            RetrofitClient()
+                    .setRetrofit(Constants.BASE_URL)
+                    .setResister(user.email!!, user.displayName!!, "google")
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        if (it.result == "success") {
+                            userdata.value = it.User
+                        }
+                    }
+        }
     }
 
     fun GetGoogleSignInClient(context: Context): GoogleSignInClient {
@@ -39,37 +48,8 @@ class LoginViewModel(var activity: Activity) : BaseViewModel() {
                 .build())
     }
 
-    fun GoogleLogin() {
-        val user = FirebaseAuth.getInstance().currentUser
-        if (null == user) {
-
-        } else {
-            startProgressBar(activity.findViewById(R.id.progress_bar))
-            RetrofitClient()
-                    .setRetrofit(Constants.BASE_URL)
-                    .setResister(user.email!!, user.displayName!!, "google")
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeBy(
-                            onNext = {
-                                finishProgessBar(activity.findViewById(R.id.progress_bar))
-                                if (it.result == "success") {
-                                    if (Shared().getUser(activity) != null) {
-                                        Shared().removeUser(activity)
-                                    }
-                                    Shared().saveUser(activity, it.User)
-                                    activity.finish()
-                                }
-                            },
-                            onError = {
-                                finishProgessBar(activity.findViewById(R.id.progress_bar))
-                            }
-                    )
-        }
-    }
 
     fun requestKakaoAuth() {
-        startProgressBar(activity.findViewById(R.id.progress_bar))
         val keys = ArrayList<String>()
         keys.add("properties.nickname")
         keys.add("properties.profile_image")
@@ -92,21 +72,11 @@ class LoginViewModel(var activity: Activity) : BaseViewModel() {
                         .setResister(response.kakaoAccount.email, response.nickname, "kakao")
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeBy(
-                                onNext = {
-                                    if (it.result == "success") {
-                                        finishProgessBar(activity.findViewById(R.id.progress_bar))
-                                        if (Shared().getUser(activity) != null) {
-                                            Shared().removeUser(activity)
-                                        }
-                                        Shared().saveUser(activity, it.User)
-                                        activity.finish()
-                                    }
-                                },
-                                onError = {
-                                    finishProgessBar(activity.findViewById(R.id.progress_bar))
-                                }
-                        )
+                        .subscribe {
+                            if (it.result == "success") {
+                                userdata.value = it.User
+                            }
+                        }
             }
         })
     }

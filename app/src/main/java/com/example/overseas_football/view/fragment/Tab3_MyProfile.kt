@@ -2,31 +2,30 @@ package com.example.overseas_football.view.fragment
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.Tab3Binding
 import com.example.overseas_football.network.Constants
 import com.example.overseas_football.view.BaseFragment
-import com.example.overseas_football.view.utill.CustomViewModelFactory
 import com.example.overseas_football.view.utill.Shared
-import com.example.overseas_football.viewmodel.Tab2ViewModel
 import com.example.overseas_football.viewmodel.Tab3ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.kakao.auth.Session
+import com.kakao.usermgmt.UserManagement
+import com.kakao.usermgmt.callback.LogoutResponseCallback
 import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.tab3.*
+import kotlinx.android.synthetic.main.tab3.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -35,19 +34,8 @@ import java.io.File
 
 class Tab3_MyProfile : BaseFragment() {
     private val viewmodel: Tab3ViewModel by lazy {
-        ViewModelProviders.of(this@Tab3_MyProfile,
-                ViewModelFactory(requireActivity(), requireContext(), this))
+        ViewModelProviders.of(this@Tab3_MyProfile)
                 .get(Tab3ViewModel::class.java)
-    }
-
-    inner class ViewModelFactory(private val activity: Activity,
-                                 private val context: Context,
-                                 private val fragment: Fragment) : ViewModelProvider.NewInstanceFactory() {
-
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return Tab3ViewModel(activity, context, fragment as Tab3_MyProfile) as T
-        }
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,45 +43,57 @@ class Tab3_MyProfile : BaseFragment() {
             with(it) {
                 setLifecycleOwner(this@Tab3_MyProfile)
                 tab3ViewModel = viewmodel
+                basicResModelObserver()
+
+                root.circleimg_profile.setOnClickListener {
+                    CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).start(requireContext(), this@Tab3_MyProfile)
+                }
+                root.btn_login_activity.setOnClickListener {
+                    startActivity(Intent(requireContext(), com.example.overseas_football.view.LoginActivity::class.java))
+                }
+                root.btn_logout.setOnClickListener {
+                    openBasicDialog(requireActivity(), "로그아웃", "로그아웃 하시겠습니까?")
+                            .onPositive { dialog, which ->
+                                if (FirebaseAuth.getInstance().currentUser != null) {
+                                    FirebaseAuth.getInstance().signOut()
+                                }
+                                if (Session.getCurrentSession().isOpened) {
+                                    UserManagement.getInstance().requestLogout(object : LogoutResponseCallback() {
+                                        override fun onCompleteLogout() {
+                                            Log.e("kakao", "logout")
+                                        }
+
+                                    })
+                                }
+                                Shared().removeUser(requireActivity())
+                                isLoginViewCheck(linearLayout_Login, linearLayout_beLogin, circleimg_profile)
+                                Toast.makeText(activity, "정상적으로 로그인 되었습니다.", Toast.LENGTH_LONG).show()
+                            }.show()
+                }
                 return root
             }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewmodel.user.observe(this, Observer { user ->
-            if (user != null) {
-                tv_nickname.text = user.nickname
-
-                linearLayout_Login.visibility = View.VISIBLE
-                linearLayout_beLogin.visibility = View.GONE
-                //사용자 프로필 이미지 유무
-                val loadValue: Any
-                if (user.img != null) {
-                    circleimgview_profile.background = null
-                    loadValue = Constants.BASE_URL + "glideProfile?img=" + user.img
-                } else {
-                    loadValue = R.drawable.defalut_profile_img
+    fun basicResModelObserver() {
+        viewmodel.basicResModel.observe(this, Observer {
+            if (it!!.result == "success") {
+                val user = Shared().getUser(requireContext())
+                if (user != null) {
+                    user.img = it.message
+                    Shared().saveUser(requireContext(),user)
+                    circleimg_profile.background = null
+                    Glide.with(requireActivity())
+                            .load(Constants.BASE_URL + "glideProfile?img=" + it.message)
+                            .into(circleimg_profile)
                 }
-                Glide.with(requireActivity())
-                        .load(loadValue)
-                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
-                        .apply(RequestOptions.skipMemoryCacheOf(true))
-                        .into(circleimgview_profile)
-                tv_nickname.text = user.nickname
-            } else {
-                linearLayout_Login.visibility = View.GONE
-                linearLayout_beLogin.visibility = View.VISIBLE
             }
         })
-
     }
 
     override fun onResume() {
         super.onResume()
-        viewmodel.checkLogin()
+        isLoginViewCheck(linearLayout_Login, linearLayout_beLogin, circleimg_profile)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

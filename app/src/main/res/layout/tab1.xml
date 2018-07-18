@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/lin_belogin"
+            android:id="@+id/linear_belogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -40,11 +40,10 @@
                 android:text="로그인시 이용 가능합니다." />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_login_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:onClick="@{(view)->Tab1ViewModel.LoginActivity(view)}"
                 android:text="로그인 이동하기" />
 
         </LinearLayout>

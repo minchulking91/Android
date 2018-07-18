@@ -1,6 +1,7 @@
 package com.example.overseas_football.view
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityLoginBinding
+import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.viewmodel.LoginViewModel
 import com.example.overseas_football.viewmodel.Tab1ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,16 +33,9 @@ class LoginActivity : BaseActivity() {
 
     private var callback: SessionCallback? = null
     private val viewmodel: LoginViewModel by lazy {
-        ViewModelProviders.of(this,ViewModelFactory(this)).get(LoginViewModel::class.java)
+        ViewModelProviders.of(this).get(LoginViewModel::class.java)
     }
 
-    inner class ViewModelFactory(private val activity: Activity) : ViewModelProvider.NewInstanceFactory() {
-
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return LoginViewModel(activity) as T
-        }
-
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (DataBindingUtil.setContentView(this, R.layout.activity_login) as ActivityLoginBinding).let {
@@ -53,11 +48,23 @@ class LoginActivity : BaseActivity() {
         callback = SessionCallback()
         Session.getCurrentSession().addCallback(callback)
         Session.getCurrentSession().checkAndImplicitOpen()
+
+        requestGoogleandKakaoUserInfo()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Session.getCurrentSession().removeCallback(callback)
+    }
+
+    fun requestGoogleandKakaoUserInfo() {
+        viewmodel.userdata.observe(this, Observer {
+            if (Shared().getUser(this@LoginActivity) != null) {
+                Shared().removeUser(this@LoginActivity)
+            }
+            Shared().saveUser(this@LoginActivity, it)
+            finish()
+        })
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
