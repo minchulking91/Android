@@ -10,28 +10,30 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.Tab2Binding
+import com.example.overseas_football.di.Presenter
 import com.example.overseas_football.view.BaseFragment
 import com.example.overseas_football.view.adapter.NewsAdapter
 import com.example.overseas_football.viewmodel.Tab2ViewModel
 import kotlinx.android.synthetic.main.tab2.*
 import kotlinx.android.synthetic.main.tab2.view.*
+import org.koin.android.ext.android.inject
 
 class Tab2_News : BaseFragment() {
-    private val viewmodel: Tab2ViewModel by lazy {
+    private val tab2ViewModel: Tab2ViewModel by lazy {
         ViewModelProviders
                 .of(this@Tab2_News)
                 .get(Tab2ViewModel::class.java)
     }
-
+    private val apiManager: Presenter by inject()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (DataBindingUtil.inflate(inflater, R.layout.tab2, container, false) as Tab2Binding).let {
             with(it) {
-                tab2viewmodel = viewmodel
+                tab2viewmodel = tab2ViewModel
                 val apiKey = requireContext().getString(R.string.news_apikey)
                 root.swipelayout.isRefreshing = true
-                viewmodel.getNews(apiKey)
+                tab2ViewModel.getNews(apiKey)
                 root.swipelayout.setOnRefreshListener {
-                    viewmodel.getNews(apiKey)
+                    tab2ViewModel.getNews(apiKey)
                 }
                 observerNews()
                 return root
@@ -40,7 +42,7 @@ class Tab2_News : BaseFragment() {
     }
 
     private fun observerNews() {
-        viewmodel.newsList.observe(this, Observer {
+        tab2ViewModel.newsList.observe(this, Observer {
             swipelayout.isRefreshing = false
             if (it != null) {
                 news_recyclerview.layoutManager = LinearLayoutManager(context)

@@ -1,20 +1,15 @@
 package com.example.overseas_football
 
 import android.app.Application
-import com.example.overseas_football.di.ApiManager
+import com.example.overseas_football.di.apiModule
 import com.kakao.auth.*
 import org.koin.android.ext.android.startKoin
-import org.koin.dsl.module.Module
-import org.koin.dsl.module.applicationContext
 
-val koinModule: Module = applicationContext {
-    factory { ApiManager() }
-}
 
 class MyService : Application() {
     override fun onCreate() {
         super.onCreate()
-        startKoin(this, listOf(koinModule))
+        startKoin(this, listOf(apiModule))
         KakaoSDK.init(KakaoSDKAdapter().SDKAdapter())
     }
 
