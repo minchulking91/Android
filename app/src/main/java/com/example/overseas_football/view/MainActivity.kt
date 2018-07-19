@@ -3,11 +3,10 @@ package com.example.overseas_football.view
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityMainBinding
 import com.example.overseas_football.view.fragment.Tab1_Community
-import com.example.overseas_football.view.fragment.Tab2_News
+import com.example.overseas_football.view.news.NewsFragment
 import com.example.overseas_football.view.fragment.Tab3_MyProfile
 import com.example.overseas_football.viewmodel.MainViewModel
 
@@ -16,7 +15,7 @@ class MainActivity : BaseActivity() {
     val mainViewModel = MainViewModel()
 
     val tab1_Community = Tab1_Community()
-    val tab2_News = Tab2_News()
+    val tab2_News = NewsFragment()
     val tab3_MyProfile = Tab3_MyProfile()
 
     override fun onCreate(savedInstanceState: Bundle?) {

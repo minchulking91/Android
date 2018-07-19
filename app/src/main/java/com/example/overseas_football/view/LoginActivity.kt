@@ -1,9 +1,6 @@
 package com.example.overseas_football.view
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
@@ -13,7 +10,6 @@ import com.example.overseas_football.R
 import com.example.overseas_football.databinding.ActivityLoginBinding
 import com.example.overseas_football.view.utill.Shared
 import com.example.overseas_football.viewmodel.LoginViewModel
-import com.example.overseas_football.viewmodel.Tab1ViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
@@ -38,6 +34,8 @@ class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //setupViews
+        subscribeUI(viewmodel)
         (DataBindingUtil.setContentView(this, R.layout.activity_login) as ActivityLoginBinding).let {
             it.loginViewModel = viewmodel
         }
@@ -49,22 +47,24 @@ class LoginActivity : BaseActivity() {
         Session.getCurrentSession().addCallback(callback)
         Session.getCurrentSession().checkAndImplicitOpen()
 
-        requestGoogleandKakaoUserInfo()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Session.getCurrentSession().removeCallback(callback)
-    }
-
-    fun requestGoogleandKakaoUserInfo() {
-        viewmodel.userdata.observe(this, Observer {
+    /**
+     * subscribe livedata from viewmodel
+     */
+    private fun subscribeUI(vm: LoginViewModel) {
+        vm.userdata.observe(this, Observer {
             if (Shared().getUser(this@LoginActivity) != null) {
                 Shared().removeUser(this@LoginActivity)
             }
             Shared().saveUser(this@LoginActivity, it)
             finish()
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Session.getCurrentSession().removeCallback(callback)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
